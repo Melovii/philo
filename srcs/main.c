@@ -2,23 +2,31 @@
 
 int	main(int argc, char **argv)
 {
-	// t_table	table;
+	t_round_table	table;
+	// t_philo			philos[MAX_PHILOS];
+	// pthread_mutex_t	forks[MAX_PHILOS]; // one mutex per fork
 
 	if (argc < MIN_ARGS || argc > MAX_ARGS)
 	{
 		printf(USAGE_MSG, argv[0]);
-		return (EX_KO);
+		return (0);
 	}
 
-	// if (!parse_args(argc, argv, &table))
-	// {
-    //     printf("Usage: %s number_of_philosophers time_to_die time_to_eat time_to_sleep [must_eat]\n", argv[0]); // TODO: define a msg in header
-	// 	return (EX_KO); // 1 // TODO: Define this in header
-	// }
-	// if (!init_table(&table))
-	// 	return (EX_KO);
+	if (validate_args(argv))
+		return (EX_KO);
+
+	if (!parse_args(argc, argv, &table))
+		return (EX_KO);
+
+	// ? ok so I have a round table with philosophers and forks
+	init_round_table(&table); // allocate forks, philosophers array, init mutexes
+
+	// ? ok so apparently I need to set the philosopher IDs then fork pointers to the forks
+	init_philosophers(&table); // set the IDs and fork pointers
 
 	// // launch and monitor the threads
-	// cleanup_table(&table);
+	// create_threads(&table); // create philosopher threads
+	// // cleanup after threads finish
+	// cleanup_table(&table); // destroy mutexes, free arrays
 	return (0);
 }

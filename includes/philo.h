@@ -3,6 +3,7 @@
 
 # include <pthread.h>
 # include <stdio.h>		// TODO: Remove if only necessary in main.c
+# include <unistd.h>
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Definitions
 
@@ -10,9 +11,10 @@
 # define EX_OK			0
 # define EX_KO			1
 
-// * Arg count bounds
+// * Bounds
 # define MIN_ARGS		5
 # define MAX_ARGS		6
+# define MAX_PHILOS		200
 
 // * Time conversion
 # define MS_TO_US(x)	((x) * 1000L)	// millisecond to microsecond conversion for usleep // TODO: CHECK IF I CAN USE MACROS
@@ -30,6 +32,8 @@
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Structs
 
+typedef struct s_round_table	t_round_table;
+
 // * Per-philosopher state
 typedef struct	s_philo
 {
@@ -39,6 +43,7 @@ typedef struct	s_philo
 	pthread_t		thread;			// the ACTUAL thread the philo runs on
 	pthread_mutex_t	*left_fork;		// pointer to the left fork (mutex 1)
 	pthread_mutex_t	*right_fork;	// pointer to the right fork (mutex 1)
+	t_round_table	*table;			// reference back to the table
 }				t_philo;
 
 // * Global simulation parameters and resources
@@ -56,12 +61,21 @@ typedef struct	s_round_table
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Function Prototypes
 
-/* --- utils.c --- */
+/* --- parse.c --- */
 // * Parse and validate CLI arguments into table; returns 1 on success
-int     parse_args(int argc, char **argv, t_round_table *table);
+int 	parse_args(int argc, char **argv, t_round_table *table);
 
+// * Checks if the argumentt consist of numbers and are within range
+int		validate_args(char **argv);
+
+
+
+/* --- utils.c --- */
 // * Allocate & initialize table resources; return 1 on success
-int     init_round_table(t_round_table *table);
+void     init_round_table(t_round_table *table);
+
+// * Initialize philosopher IDs and fork pointers; set last meal and meals eaten to 0
+void	init_philosophers(t_round_table *table);
 
 // * Destroy mutexes & free all dynamic allocations
 void    cleanup_table(t_round_table *table);
@@ -89,5 +103,8 @@ int     detect_and_signal_death(t_round_table *table);
 /* --- philosophers.c --- */
 // * Entry point for each philosopher thread’s routine
 void    *philo_routine(void *arg);
+
+
+/* temp */
 
 #endif

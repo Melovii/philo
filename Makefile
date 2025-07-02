@@ -7,7 +7,9 @@ OBJS_DIR		= objs
 
 SRC_FILES		=	main.c			\
 					philosophers.c	\
+					simulation.c	\
 					utils.c			\
+					parse.c			\
 
 OBJ_FILES		= $(SRC_FILES:.c=.o)
 
