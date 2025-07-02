@@ -18,10 +18,9 @@ int	main(int argc, char **argv)
 	if (!parse_args(argc, argv, &table))
 		return (EX_KO);
 
-	// ? ok so I have a round table with philosophers and forks
-	init_round_table(&table); // allocate forks, philosophers array, init mutexes
+	if (!init_round_table(&table)) // allocate forks, philosophers array, init mutexes
+		return (EX_KO);
 
-	// ? ok so apparently I need to set the philosopher IDs then fork pointers to the forks
 	init_philosophers(&table); // set the IDs and fork pointers
 
 	// // launch and monitor the threads
