@@ -2,8 +2,11 @@
 # define PHILO_H
 
 # include <pthread.h>
-# include <stdio.h>		// TODO: Remove if only necessary in main.c
 # include <unistd.h>
+# include <stdlib.h>
+# include <stdbool.h>	// TODO: Check if permissable by the subject.pdf
+# include <stdio.h>		// TODO: Remove if only necessary in main.c
+# include <sys/time.h>
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Definitions
 
@@ -30,6 +33,8 @@
 	"Usage: %s number_of_philosophers time_to_die time_to_eat " \
 	"time_to_sleep [must_eat]\n"	// TODO: check if this is ok lol
 
+typedef pthread_mutex_t t_mtx; // convenient lol
+
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Structs
 
 typedef struct s_round_table	t_round_table;
@@ -38,11 +43,12 @@ typedef struct s_round_table	t_round_table;
 typedef struct	s_philo
 {
 	int				id;				// starts from 1, ok? lol
-	long			last_meal;		// timestamp of last meal - use to detect death
+	long			last_meal;		// timestamp of last meal eaten - use to detect death (if current time - last_meal > time_to_die)
 	int				meals_eaten;	// use for optional stopping condition
+	bool			is_full;		// true if the philo has eaten enough times // ! uhm do I keep this lol
 	pthread_t		thread;			// the ACTUAL thread the philo runs on
-	pthread_mutex_t	*left_fork;		// pointer to the left fork (mutex 1)
-	pthread_mutex_t	*right_fork;	// pointer to the right fork (mutex 1)
+	t_mtx			*left_fork;		// pointer to the left fork (mutex 1)
+	t_mtx			*right_fork;	// pointer to the right fork (mutex 1)
 	t_round_table	*table;			// reference back to the table
 }				t_philo;
 
@@ -54,9 +60,12 @@ typedef struct	s_round_table
 	long			time_to_eat;	// ms to stimulate nomnom
 	long			time_to_die;	// ms allowed between "end of last meal" and strarvation (check condition)
 	int				must_eat_count;	// end simulation when every philo eats this many times
+	bool			end_simulation;	// true when all philos are full or dead
 	t_philo			*philos;		// holds each philosopher's state
-	pthread_mutex_t	*forks;			// one per fork (lock two adjacent forks before eating)
-	pthread_mutex_t	print_lock;		// use this to prevent printf calls from different threads
+	t_mtx			*forks;			// one per fork (lock two adjacent forks before eating)
+	t_mtx			print_lock;		// use this to prevent printf calls from different threads
+	t_mtx			death_lock;		// use this to prevent multiple death signals
+	t_mtx			meal_lock;		// use this to prevent multiple meal count updates
 }				t_round_table;
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Function Prototypes
@@ -72,7 +81,7 @@ int		validate_args(char **argv);
 
 /* --- utils.c --- */
 // * Allocate & initialize table resources; return 1 on success
-void     init_round_table(t_round_table *table);
+int     init_round_table(t_round_table *table);
 
 // * Initialize philosopher IDs and fork pointers; set last meal and meals eaten to 0
 void	init_philosophers(t_round_table *table);
