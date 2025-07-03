@@ -1,12 +1,12 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <pthread.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <stdbool.h>	// TODO: Check if permissable by the subject.pdf
-# include <stdio.h>		// TODO: Remove if only necessary in main.c
-# include <sys/time.h>
+# include <pthread.h>	// for pthreads
+# include <unistd.h>	// for usleep, write
+# include <stdlib.h>	// for malloc, free
+# include <stdbool.h>	// for bool				// TODO: Check if permissable by the subject.pdf
+# include <stdio.h>		// for printf			// TODO: Remove if only necessary in main.c
+# include <sys/time.h>	// for gettimeofday
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Definitions
 
@@ -79,6 +79,15 @@ int		validate_args(char **argv);
 
 
 
+/* --- time.c --- */
+// * Return current time in milliseconds
+unsigned long	get_timestamp(void);
+
+// * Sleep for a specified number of milliseconds
+void	delay(unsigned long ms);
+
+
+
 /* --- utils.c --- */
 // * Allocate & initialize table resources; return 1 on success
 int     init_round_table(t_round_table *table);
@@ -88,9 +97,6 @@ void	init_philosophers(t_round_table *table);
 
 // * Destroy mutexes & free all dynamic allocations
 void    cleanup_table(t_round_table *table);
-
-// * Return current time in milliseconds
-long    get_timestamp(void);
 
 // * Thread-safe print of a philosopher’s state
 void    print_state(t_round_table *table, int id, char *state);
