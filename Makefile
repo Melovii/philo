@@ -10,6 +10,7 @@ SRC_FILES		=	main.c			\
 					simulation.c	\
 					utils.c			\
 					parse.c			\
+					time.c			\
 
 OBJ_FILES		= $(SRC_FILES:.c=.o)
 
