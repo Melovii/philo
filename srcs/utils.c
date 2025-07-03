@@ -51,8 +51,13 @@ void	init_philosophers(t_round_table *table)
 // Destroy mutexes, free arrays
 void	cleanup_table(t_round_table *table);
 
-// Return current time in ms
-long	get_timestamp(void);
-
 // Lock print_lock, printf timestamp/id/state, unlock
-void	print_state(t_round_table *table, int id, char *state);
+void	print_state(t_round_table *table, int id, char *state)
+{
+	unsigned long	timestamp;
+	
+	timestamp = get_timestamp();
+	pthread_mutex_lock(&table->print_lock); // lock print mutex
+	printf("%lu %d %s\n", timestamp, id, state);
+	pthread_mutex_unlock(&table->print_lock); // unlock print mutex
+}
