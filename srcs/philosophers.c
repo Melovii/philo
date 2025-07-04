@@ -1,6 +1,6 @@
 #include "philo.h"
 
-// // The 4 internal steps
+// * Picks up forks in a way that prevents deadlock and prevents circular wait
 static void	pick_up_forks(t_philo *philo)
 {
 	/*
@@ -24,6 +24,7 @@ static void	pick_up_forks(t_philo *philo)
 	}
 }
 
+// * Puts down forks after eating, unlocking them so other philosophers can use them
 static void	put_down_forks(t_philo *philo)
 {
 	// unlock the forks after eating
@@ -32,18 +33,23 @@ static void	put_down_forks(t_philo *philo)
 	pthread_mutex_unlock(philo->right_fork); // unlock right fork
 }
 
-// static void	eat(t_philo *philo, t_round_table *table)
-// {
-// 	// simulate eating
-// }
+// * Simulates eating by updating last meal timestamp and meals eaten
+static void	eat(t_philo *philo)
+{
+	// simulate eating
+	(void)philo;
+}
 
-// static void	rest(t_philo *philo, t_round_table *table)
-// {
-// 	// simulate resting/sleeping
-// }
+static void	rest(t_philo *philo)
+{
+	// simulate resting/sleeping
+}
 
-// The think -> pickup -> eat -> putdown -> sleep cycle (and death check)
-// Takes void *arg because pthread_create expects a function with this signature
+/*
+* Takes void *arg because pthread_create expects a function with this signature
+* Function that runs in each philosopher thread and checks for death
+* (think -> pickup -> eat -> putdown -> sleep cycle)
+*/
 void	*philo_routine(void *arg)
 {
 	t_round_table	*table;
@@ -55,26 +61,27 @@ void	*philo_routine(void *arg)
 	table = philo->table; // get the reference to the round table
 	
 	// think
-	while (!table->end_simulation)
+	while (!table->sim_halted)
 	{
+		// Check for death - all unsigned long arithmetic
 		if (get_timestamp() - philo->last_meal > table->time_to_die)
 		{
 			print_state(table, philo->id, STATE_DEAD);
-			table->end_simulation = true; // signal end of simulation
-			return NULL; // exit the thread
+			table->sim_halted = true; // signal end of simulation
+			return (NULL); // exit the thread
 		}
 		
 		// pickup forks
 		pick_up_forks(philo);
 		
 		// eat
-		// eat(philo, table);
+		eat(philo);
 		
 		// put down forks
 		put_down_forks(philo);
 		
 		// sleep
-		// rest(philo, table);
+		rest(philo);
 	}
 
 	return (NULL); // exit the thread
