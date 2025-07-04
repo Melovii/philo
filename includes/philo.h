@@ -5,6 +5,7 @@
 # include <unistd.h>	// for usleep, write
 # include <stdlib.h>	// for malloc, free
 # include <stdbool.h>	// for bool				// TODO: Check if permissable by the subject.pdf
+# include <limits.h>	// for INT_MAX			// TODO: Check if permissable by the subject.pdf
 # include <stdio.h>		// for printf			// TODO: Remove if only necessary in main.c
 # include <sys/time.h>	// for gettimeofday
 
@@ -17,17 +18,28 @@
 // * Bounds
 # define MIN_ARGS		5
 # define MAX_ARGS		6
+
+// * Number of philosophers allowed
+# define MIN_PHILOS		1
 # define MAX_PHILOS		200
+# define MAX_PHILOS_STR	"200"
 
 // * Time conversion
 # define MS_TO_US(x)	((x) * 1000L)	// millisecond to microsecond conversion for usleep // TODO: CHECK IF I CAN USE MACROS
 
 // * Philo state msgs
-# define STATE_FORK		"has taken a fork"
-# define STATE_SLEEP	"is sleeping"
-# define STATE_EAT		"is eating"
-# define STATE_THINK	"is thinking"
-# define STATE_DEAD		"died"
+# define STATE_FORK		"has taken a fork 🍴"
+# define STATE_SLEEP	"is sleeping 😴"
+# define STATE_EAT		"is eating 🍽️"
+# define STATE_THINK	"is thinking 🤔"
+# define STATE_DEAD		"\e[0;31mdied ☠️\e[m"
+
+// * Cute emojis for states
+# define FORK_EM		"•ᴗ• 𐂐"
+# define EEP_EM			"(ᴗ˳ᴗ)ᶻ𝗓𐰁 ࣪ ִֶָ☾."
+# define EAT_EM			"(っ˘ڡ˘ς)"
+# define THINK_EM		"( ╹ -╹)?"
+# define DEAD_EM		"𝕯𝖊𝖆𝖙𝖍 𓉸 ☠︎︎ ✘_ ✘" // pick one lol
 
 #define USAGE_MSG  \
 	"Usage: %s number_of_philosophers time_to_die time_to_eat " \
@@ -60,7 +72,7 @@ typedef struct	s_round_table
 	unsigned long	time_to_eat;	// ms to stimulate nomnom
 	unsigned long	time_to_die;	// ms allowed between "end of last meal" and strarvation (check condition)
 	int				must_eat_count;	// end simulation when every philo eats this many times
-	bool			end_simulation;	// true when all philos are full or dead
+	bool			sim_halted;	// true when all philos are full or dead
 	t_philo			*philos;		// holds each philosopher's state
 	t_mtx			*forks;			// one per fork (lock two adjacent forks before eating)
 	t_mtx			print_lock;		// use this to prevent printf calls from different threads
@@ -73,7 +85,7 @@ typedef struct	s_round_table
 /* --- parse.c --- */
 int 			parse_args(int argc, char **argv, t_round_table *table);
 int				validate_args(char **argv);
-
+int				ft_atoi(const char *str);
 
 /* --- time.c --- */
 unsigned long	get_timestamp(void);
