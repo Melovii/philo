@@ -49,7 +49,27 @@ void	init_philosophers(t_round_table *table)
 }
 
 // Destroy mutexes, free arrays
-void	cleanup_table(t_round_table *table);
+void	cleanup_table(t_round_table *table)
+{
+	int	i;
+
+	// destroy all forks (loop)
+	i = 0;
+	while (i < table->num_philos)
+	{
+		pthread_mutex_destroy(&table->forks[i]); // destroy each fork mutex
+		i++;
+	}
+
+	// destroy control mutexes (print_lock, death_lock, meal_lock)
+	pthread_mutex_destroy(&table->print_lock); // destroy print lock mutex
+	pthread_mutex_destroy(&table->death_lock); // destroy death lock mutex
+	pthread_mutex_destroy(&table->meal_lock); // destroy meal lock mutex
+
+	// free allocated memory (arrays)
+	free(table->philos); // free philosophers array
+	free(table->forks); // free forks array
+}
 
 // Lock print_lock, printf timestamp/id/state, unlock
 void	print_state(t_round_table *table, int id, char *state)
