@@ -5,7 +5,7 @@ int 	init_round_table(t_round_table *table)
 {
 	int	i;
 
-	table->end_simulation = false; // init simulation state
+	table->sim_halted = false; // init simulation state
 	
 	table->philos = malloc(sizeof(t_philo) * table->num_philos); // allocate philosophers array
 	if (!table->philos)
