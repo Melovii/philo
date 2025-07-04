@@ -43,6 +43,7 @@ static void	eat(t_philo *philo)
 static void	rest(t_philo *philo)
 {
 	// simulate resting/sleeping
+	(void)philo;
 }
 
 /*
