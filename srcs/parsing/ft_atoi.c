@@ -1,4 +1,4 @@
-#include "../includes/philo.h"
+#include "philo.h"
 
 // Checks if character is whitespace
 static int is_space(char c)
