@@ -43,8 +43,8 @@ typedef struct s_round_table	t_round_table;
 typedef struct	s_philo
 {
 	int				id;				// starts from 1, ok? lol
-	long			last_meal;		// timestamp of last meal eaten - use to detect death (if current time - last_meal > time_to_die)
-	int				meals_eaten;	// use for optional stopping condition
+	unsigned long	last_meal;		// timestamp of last meal eaten - use to detect death (if current time - last_meal > time_to_die)
+	int				meals_eaten;	// use for optional stopping condition // !TODO: Consider changing to size_t
 	bool			is_full;		// true if the philo has eaten enough times // ! uhm do I keep this lol
 	pthread_t		thread;			// the ACTUAL thread the philo runs on
 	t_mtx			*left_fork;		// pointer to the left fork (mutex 1)
@@ -56,9 +56,9 @@ typedef struct	s_philo
 typedef struct	s_round_table
 {
 	int				num_philos;		// philosopher AND fork count 
-	long			time_to_sleep;	// ms to stimulate mimimi 
-	long			time_to_eat;	// ms to stimulate nomnom
-	long			time_to_die;	// ms allowed between "end of last meal" and strarvation (check condition)
+	unsigned long	time_to_sleep;	// ms to stimulate mimimi 
+	unsigned long	time_to_eat;	// ms to stimulate nomnom
+	unsigned long	time_to_die;	// ms allowed between "end of last meal" and strarvation (check condition)
 	int				must_eat_count;	// end simulation when every philo eats this many times
 	bool			end_simulation;	// true when all philos are full or dead
 	t_philo			*philos;		// holds each philosopher's state

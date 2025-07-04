@@ -1,7 +1,7 @@
 #include "philo.h"
 
 // // The 4 internal steps
-static void	pick_up_forks(t_philo *philo, t_round_table *table)
+static void	pick_up_forks(t_philo *philo)
 {
 	/*
 		! To prevent deadlock:
@@ -24,7 +24,7 @@ static void	pick_up_forks(t_philo *philo, t_round_table *table)
 	}
 }
 
-static void	put_down_forks(t_philo *philo, t_round_table *table)
+static void	put_down_forks(t_philo *philo)
 {
 	// unlock the forks after eating
 
@@ -32,15 +32,15 @@ static void	put_down_forks(t_philo *philo, t_round_table *table)
 	pthread_mutex_unlock(philo->right_fork); // unlock right fork
 }
 
-static void	eat(t_philo *philo, t_round_table *table)
-{
-	// simulate eating
-}
+// static void	eat(t_philo *philo, t_round_table *table)
+// {
+// 	// simulate eating
+// }
 
-static void	rest(t_philo *philo, t_round_table *table)
-{
-	// simulate resting/sleeping
-}
+// static void	rest(t_philo *philo, t_round_table *table)
+// {
+// 	// simulate resting/sleeping
+// }
 
 // The think -> pickup -> eat -> putdown -> sleep cycle (and death check)
 // Takes void *arg because pthread_create expects a function with this signature
@@ -65,16 +65,16 @@ void	*philo_routine(void *arg)
 		}
 		
 		// pickup forks
-		pick_up_forks(philo, table);
+		pick_up_forks(philo);
 		
 		// eat
-		eat(philo, table);
+		// eat(philo, table);
 		
 		// put down forks
-		put_down_forks(philo, table);
+		put_down_forks(philo);
 		
 		// sleep
-		rest(philo, table);
+		// rest(philo, table);
 	}
 
 	return (NULL); // exit the thread
