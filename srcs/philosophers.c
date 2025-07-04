@@ -59,7 +59,7 @@ void	*philo_routine(void *arg)
 	{
 		if (get_timestamp() - philo->last_meal > table->time_to_die)
 		{
-			print_state(table, philo->id, STATE_DEAD); // Define STATE_DEAD in philo.h
+			print_state(table, philo->id, STATE_DEAD);
 			table->end_simulation = true; // signal end of simulation
 			return NULL; // exit the thread
 		}
