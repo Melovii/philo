@@ -71,53 +71,30 @@ typedef struct	s_round_table
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Function Prototypes
 
 /* --- parse.c --- */
-// * Parse and validate CLI arguments into table; returns 1 on success
-int 	parse_args(int argc, char **argv, t_round_table *table);
-
-// * Checks if the argumentt consist of numbers and are within range
-int		validate_args(char **argv);
-
+int 			parse_args(int argc, char **argv, t_round_table *table);
+int				validate_args(char **argv);
 
 
 /* --- time.c --- */
-// * Return current time in milliseconds
 unsigned long	get_timestamp(void);
-
-// * Sleep for a specified number of milliseconds
-void	delay(unsigned long ms);
-
+void			delay(unsigned long ms);
 
 
 /* --- utils.c --- */
-// * Allocate & initialize table resources; return 1 on success
-int     init_round_table(t_round_table *table);
-
-// * Initialize philosopher IDs and fork pointers; set last meal and meals eaten to 0
-void	init_philosophers(t_round_table *table);
-
-// * Destroy mutexes & free all dynamic allocations
-void    cleanup_table(t_round_table *table);
-
-// * Thread-safe print of a philosopher’s state
-void    print_state(t_round_table *table, int id, char *state);
-
+int     		init_round_table(t_round_table *table);
+void			init_philosophers(t_round_table *table);
+void    		cleanup_table(t_round_table *table);
+void    		print_state(t_round_table *table, int id, char *state);
 
 
 /* --- simulation.c --- */
-// * Spawn philosopher threads and any monitor(s); return 1 on success
-int     start_simulation(t_round_table *table);
-
-// * Join threads or otherwise wait until simulation ends
-void    wait_for_completion(t_round_table *table);
-
-// * (Optional) Centralized death detection and signaling
-int     detect_and_signal_death(t_round_table *table);
-
+int     		start_simulation(t_round_table *table);
+void    		wait_for_completion(t_round_table *table);
+int     		detect_and_signal_death(t_round_table *table);
 
 
 /* --- philosophers.c --- */
-// * Entry point for each philosopher thread’s routine
-void    *philo_routine(void *arg);
+void    		*philo_routine(void *arg);
 
 
 /* temp */
