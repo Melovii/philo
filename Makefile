@@ -1,9 +1,12 @@
 NAME			= philo
-CC				= cc
-CFLAGS			= -Wall -Wextra -Werror
-INCLUDES		= -I./includes
-SRCS_DIR		= srcs
-OBJS_DIR		= objs
+
+CC				=	cc
+CFLAGS			=	-Wall -Wextra -Werror
+# CFLAGS			+=	-pthread -g3 -fsanitize=address
+INCLUDES		=	-I./includes
+
+SRCS_DIR		=	srcs
+OBJS_DIR		=	objs
 
 SRC_FILES		=	main.c			\
 					philosophers.c	\
@@ -11,11 +14,12 @@ SRC_FILES		=	main.c			\
 					utils.c			\
 					parse.c			\
 					time.c			\
+					ft_atoi.c		\
 
-OBJ_FILES		= $(SRC_FILES:.c=.o)
+OBJ_FILES		=	$(SRC_FILES:.c=.o)
 
-SRCS			= $(addprefix $(SRCS_DIR)/,$(SRC_FILES))
-OBJS			= $(addprefix $(OBJS_DIR)/,$(OBJ_FILES))
+SRCS			=	$(addprefix $(SRCS_DIR)/,$(SRC_FILES))
+OBJS			=	$(addprefix $(OBJS_DIR)/,$(OBJ_FILES))
 
 all: $(NAME)
 
