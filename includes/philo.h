@@ -85,14 +85,18 @@ typedef struct	s_round_table
 /* --- parse.c --- */
 int 			parse_args(int argc, char **argv, t_round_table *table);
 int				validate_args(char **argv);
+
+
+/* --- ft_atoi.c --- */
 int				ft_atoi(const char *str);
+
 
 /* --- time.c --- */
 unsigned long	get_timestamp(void);
 void			delay(unsigned long ms);
 
 
-/* --- utils.c --- */
+/* --- table.c --- */
 int     		init_round_table(t_round_table *table);
 void			init_philosophers(t_round_table *table);
 void    		cleanup_table(t_round_table *table);
@@ -105,7 +109,7 @@ void    		wait_for_completion(t_round_table *table);
 int     		detect_and_signal_death(t_round_table *table);
 
 
-/* --- philosophers.c --- */
+/* --- routine.c --- */
 void    		*philo_routine(void *arg);
 
 
