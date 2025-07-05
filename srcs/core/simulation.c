@@ -38,54 +38,60 @@ static int	full_check(t_round_table *table)
 {
 	int	i;
 
+	if (table->must_eat_count == -1)
+		return (0);
 	i = 0;
+	pthread_mutex_lock(&table->meal_lock);
 	while (i < table->num_philos)
 	{
 		// If any philosopher has not eaten enough times, return false
-		if (table->philos[i].meals_eaten < table->must_eat_count)
+		if (table->must_eat_count != -1
+			&& table->philos[i].meals_eaten < table->must_eat_count)
+		{
+			pthread_mutex_unlock(&table->meal_lock);
 			return (0);
+		}
 		i++;
 	}
+	pthread_mutex_unlock(&table->meal_lock);
 	return (1);
 }
 
 // * Monitor simulation until death or completion
-static void	monitor(t_round_table *table)
+static void	*monitor(void *data)
 {
+	t_round_table	*table;
 	int				i;
-	unsigned long	current_time;
 
-	while (!table->sim_halted)
+	table = (t_round_table *)data;
+	while (1)
 	{
-		// Check each philosopher for death
 		i = 0;
 		while (i < table->num_philos)
 		{
-			pthread_mutex_lock(&table->meal_lock); // Protect last_meal access
-			current_time = get_timestamp();
-			
-			// Check if this philosopher has died
-			if (current_time - table->philos[i].last_meal > table->time_to_die)
+			pthread_mutex_lock(&table->meal_lock);
+			if (get_timestamp() - table->philos[i].last_meal > table->time_to_die)
 			{
-				pthread_mutex_unlock(&table->meal_lock);
 				print_state(table, table->philos[i].id, STATE_DEAD);
+				pthread_mutex_lock(&table->death_lock);
 				table->sim_halted = true;
-				return;
+				pthread_mutex_unlock(&table->death_lock);
+				pthread_mutex_unlock(&table->meal_lock);
+				return (NULL);
 			}
 			pthread_mutex_unlock(&table->meal_lock);
 			i++;
 		}
-		
-		// Only check for meal completion if must_eat_count is specified (not -1)
-		if (table->must_eat_count != -1 && full_check(table))
+		if (full_check(table))
 		{
-			// If all philosophers have eaten enough, signal completion
+			pthread_mutex_lock(&table->death_lock);
 			table->sim_halted = true;
-			break;
+			pthread_mutex_unlock(&table->death_lock);
+			return (NULL);
 		}
-		
-		delay(1); // Check very frequently for death detection (1ms)
+		delay(1);
 	}
+	return (NULL);
 }
 
 // * Wait for all philosopher threads to finish
@@ -109,11 +115,18 @@ static void	join_threads(t_round_table *table)
 // * Run the simulation: start threads, monitor, and join
 void	run_sim(t_round_table *table)
 {
+	pthread_t	monitor_thread;
+
 	if (!start_threads(table))
 	{
 		printf("Error: Failed to start threads\n");
 		return;
 	}
-	monitor(table);
+	if (pthread_create(&monitor_thread, NULL, monitor, table) != 0)
+	{
+		printf("Error: Failed to create monitor thread\n");
+		return;
+	}
+	pthread_join(monitor_thread, NULL);
 	join_threads(table);
 }

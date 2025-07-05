@@ -83,16 +83,17 @@ void	*philo_routine(void *arg)
 	// if (!philo)
 		// return NULL; // handle error if philo is NULL
 	table = philo->table; // get the reference to the round table
-	
+	if (table->num_philos == 1)
+	{
+		print_state(table, philo->id, STATE_FORK);
+		delay(table->time_to_die);
+		return (NULL);
+	}
 	// think
 	while (!table->sim_halted)
 	{
 		// think (philosopher contemplates before trying to eat lmao)
 		print_state(table, philo->id, STATE_THINK);
-		
-		// Small thinking delay to prevent perfect synchronization
-		delay(1 + (philo->id % 10)); // 1-10ms thinking time based on philosopher ID
-		// TODO: is it okay, really?
 		
 		// pickup forks
 		pick_up_forks(philo);
