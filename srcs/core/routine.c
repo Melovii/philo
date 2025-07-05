@@ -36,14 +36,31 @@ static void	put_down_forks(t_philo *philo)
 // * Simulates eating by updating last meal timestamp and meals eaten
 static void	eat(t_philo *philo)
 {
-	// simulate eating
-	(void)philo;
+	print_state(philo->table, philo->id, STATE_EAT);
+	
+	// lock meal
+	pthread_mutex_lock(&philo->table->meal_lock);
+
+	// update last meal timestamp
+	philo->last_meal = get_timestamp();
+	
+	// update meals eaten count
+	philo->meals_eaten++;
+	
+	// unlock meal
+	pthread_mutex_unlock(&philo->table->meal_lock);
+	
+	// delay for eating time
+	delay(philo->table->time_to_eat);
 }
 
+// * Simulates resting/sleeping by delaying for the specified time
 static void	rest(t_philo *philo)
 {
-	// simulate resting/sleeping
-	(void)philo;
+	print_state(philo->table, philo->id, STATE_SLEEP);
+
+	// delay for sleeping time
+	delay(philo->table->time_to_sleep);
 }
 
 /*
@@ -72,9 +89,12 @@ void	*philo_routine(void *arg)
 			return (NULL); // exit the thread
 		}
 		
+		// think (philosopher contemplates before trying to eat lmao)
+		print_state(table, philo->id, STATE_THINK);
+		
 		// pickup forks
 		pick_up_forks(philo);
-		
+
 		// eat
 		eat(philo);
 		
