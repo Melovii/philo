@@ -40,10 +40,12 @@ int	main(int argc, char **argv)
 
 	debug_print_table(&table); // debug print the table state
 
-	// // launch and monitor the threads
-	// create_threads(&table); // create philosopher threads
-	// // cleanup after threads finish
-	// cleanup_table(&table); // destroy mutexes, free arrays
-	printf("Simulation finished successfully and no one has starved lol\n");
+	// Launch and monitor the simulation
+	run_sim(&table);
+
+	// Cleanup after threads finish
+	cleanup_table(&table); // destroy mutexes, free arrays
+	
+	printf("Simulation finished successfully!\n");
 	return (0);
 }

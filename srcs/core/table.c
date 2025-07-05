@@ -74,10 +74,24 @@ void	cleanup_table(t_round_table *table)
 // Lock print_lock, printf timestamp/id/state, unlock
 void	print_state(t_round_table *table, int id, char *state)
 {
-	unsigned long	timestamp;
+	unsigned long	current_time;
+	unsigned long	relative_time;
 	
-	timestamp = get_timestamp();
+	current_time = get_timestamp();
+	
+	// Prevent underflow: if current_time is somehow less than start_time, use 0
+	if (current_time >= table->start_time)
+		relative_time = current_time - table->start_time;
+	else
+		relative_time = 0;
+	
 	pthread_mutex_lock(&table->print_lock); // lock print mutex
-	printf("%lu %d %s\n", timestamp, id, state);
+	
+	// Don't print anything if simulation has been halted (someone died or finished)
+	if (!table->sim_halted)
+	{
+		printf("%lu %d %s\n", relative_time, id, state); // Print relative timestamp
+	}
+	
 	pthread_mutex_unlock(&table->print_lock); // unlock print mutex
 }

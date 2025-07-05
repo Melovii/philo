@@ -33,6 +33,7 @@
 # define STATE_EAT		"is eating 🍽️"
 # define STATE_THINK	"is thinking 🤔"
 # define STATE_DEAD		"\e[0;31mdied ☠️\e[m"
+# define STATE_ERROR	"Error in simulaton" // TODO: consider removing this lol
 
 // * Cute emojis for states
 # define FORK_EM		"•ᴗ• 𐂐"
@@ -72,7 +73,8 @@ typedef struct	s_round_table
 	unsigned long	time_to_eat;	// ms to stimulate nomnom
 	unsigned long	time_to_die;	// ms allowed between "end of last meal" and strarvation (check condition)
 	int				must_eat_count;	// end simulation when every philo eats this many times
-	bool			sim_halted;	// true when all philos are full or dead
+	bool			sim_halted;		// true when all philos are full or dead
+	unsigned long	start_time;		// simulation start timestamp for relative time calculation
 	t_philo			*philos;		// holds each philosopher's state
 	t_mtx			*forks;			// one per fork (lock two adjacent forks before eating)
 	t_mtx			print_lock;		// use this to prevent printf calls from different threads
@@ -94,6 +96,7 @@ int				ft_atoi(const char *str);
 /* --- time.c --- */
 unsigned long	get_timestamp(void);
 void			delay(unsigned long ms);
+void			ft_usleep(unsigned long ms);
 
 
 /* --- table.c --- */
@@ -104,9 +107,9 @@ void    		print_state(t_round_table *table, int id, char *state);
 
 
 /* --- simulation.c --- */
-int     		start_simulation(t_round_table *table);
-void    		wait_for_completion(t_round_table *table);
-int     		detect_and_signal_death(t_round_table *table);
+int     		start_threads(t_round_table *table);
+void    		run_sim(t_round_table *table);
+// int     		detect_and_signal_death(t_round_table *table);
 
 
 /* --- routine.c --- */

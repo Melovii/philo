@@ -15,12 +15,18 @@ static void	pick_up_forks(t_philo *philo)
 	if (philo->id % 2 == 0) // even philosopher
 	{
 		pthread_mutex_lock(philo->left_fork); // lock left fork
+		print_state(philo->table, philo->id, STATE_FORK);
+
 		pthread_mutex_lock(philo->right_fork); // lock right fork
+		print_state(philo->table, philo->id, STATE_FORK);
 	}
 	else // odd philosopher
 	{
 		pthread_mutex_lock(philo->right_fork); // lock right fork
+		print_state(philo->table, philo->id, STATE_FORK);
+
 		pthread_mutex_lock(philo->left_fork); // lock left fork
+		print_state(philo->table, philo->id, STATE_FORK);
 	}
 }
 
@@ -81,16 +87,12 @@ void	*philo_routine(void *arg)
 	// think
 	while (!table->sim_halted)
 	{
-		// Check for death - all unsigned long arithmetic
-		if (get_timestamp() - philo->last_meal > table->time_to_die)
-		{
-			print_state(table, philo->id, STATE_DEAD);
-			table->sim_halted = true; // signal end of simulation
-			return (NULL); // exit the thread
-		}
-		
 		// think (philosopher contemplates before trying to eat lmao)
 		print_state(table, philo->id, STATE_THINK);
+		
+		// Small thinking delay to prevent perfect synchronization
+		delay(1 + (philo->id % 10)); // 1-10ms thinking time based on philosopher ID
+		// TODO: is it okay, really?
 		
 		// pickup forks
 		pick_up_forks(philo);
