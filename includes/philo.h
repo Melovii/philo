@@ -8,6 +8,7 @@
 # include <limits.h>	// for INT_MAX			// TODO: Check if permissable by the subject.pdf
 # include <stdio.h>		// for printf			// TODO: Remove if only necessary in main.c
 # include <sys/time.h>	// for gettimeofday
+# include <string.h>	// for strcmp			// TODO: Replace with ft_strcmp or remove later
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Definitions
 
@@ -28,12 +29,12 @@
 # define MS_TO_US(x)	((x) * 1000L)	// millisecond to microsecond conversion for usleep // TODO: CHECK IF I CAN USE MACROS
 
 // * Philo state msgs
-# define STATE_FORK		"has taken a fork 🍴"
-# define STATE_SLEEP	"is sleeping 😴"
-# define STATE_EAT		"is eating 🍽️"
-# define STATE_THINK	"is thinking 🤔"
-# define STATE_DEAD		"\e[0;31mdied ☠️\e[m"
-# define STATE_ERROR	"Error in simulaton" // TODO: consider removing this lol
+# define STATE_FORK		"has taken a fork"
+# define STATE_SLEEP	"is sleeping"
+# define STATE_EAT		"is eating"
+# define STATE_DEAD		"died"
+# define STATE_THINK	"is thinking"
+# define STATE_ERROR	"Error in simulation" // TODO: consider removing this lol
 
 // * Cute emojis for states
 # define FORK_EM		"•ᴗ• 𐂐"

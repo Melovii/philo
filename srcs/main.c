@@ -1,16 +1,16 @@
 #include "philo.h"
 
-static void debug_print_table(t_round_table *table)
-{
-    printf("===== DEBUG: Round Table State =====\n");
-    printf("Number of Philosophers: %d\n", table->num_philos);
-    printf("Time to die (ms): %ld\n", table->time_to_die);
-    printf("Time to eat (ms): %ld\n", table->time_to_eat);
-    printf("Time to sleep (ms): %ld\n", table->time_to_sleep);
-    printf("Must eat count: %d\n", table->must_eat_count);
-    printf("Simulation halted flag: %d\n", table->sim_halted);
-    printf("====================================\n");
-}
+// static void debug_print_table(t_round_table *table)
+// {
+//     printf("===== DEBUG: Round Table State =====\n");
+//     printf("Number of Philosophers: %d\n", table->num_philos);
+//     printf("Time to die (ms): %ld\n", table->time_to_die);
+//     printf("Time to eat (ms): %ld\n", table->time_to_eat);
+//     printf("Time to sleep (ms): %ld\n", table->time_to_sleep);
+//     printf("Must eat count: %d\n", table->must_eat_count);
+//     printf("Simulation halted flag: %d\n", table->sim_halted);
+//     printf("====================================\n");
+// }
 
 int	main(int argc, char **argv)
 {
@@ -38,7 +38,7 @@ int	main(int argc, char **argv)
 
 	init_philosophers(&table); // set the IDs and fork pointers
 
-	debug_print_table(&table); // debug print the table state
+	// debug_print_table(&table); // debug print the table state
 
 	// Launch and monitor the simulation
 	run_sim(&table);
@@ -46,6 +46,6 @@ int	main(int argc, char **argv)
 	// Cleanup after threads finish
 	cleanup_table(&table); // destroy mutexes, free arrays
 	
-	printf("Simulation finished successfully!\n");
+	// printf("Simulation finished successfully!\n");
 	return (0);
 }

@@ -69,6 +69,13 @@ static void	rest(t_philo *philo)
 	delay(philo->table->time_to_sleep);
 }
 
+// * Simulates thinking to prevent starvation
+static void	think(t_philo *philo)
+{
+	print_state(philo->table, philo->id, STATE_THINK);
+	usleep(100);
+}
+
 /*
 * Takes void *arg because pthread_create expects a function with this signature
 * Function that runs in each philosopher thread and checks for death
@@ -89,6 +96,8 @@ void	*philo_routine(void *arg)
 		delay(table->time_to_die);
 		return (NULL);
 	}
+	if (philo->id % 2 == 0)
+		usleep(100);
 	// think
 	while (!table->sim_halted)
 	{
@@ -106,6 +115,7 @@ void	*philo_routine(void *arg)
 		
 		// sleep
 		rest(philo);
+		think(philo);
 	}
 
 	return (NULL); // exit the thread

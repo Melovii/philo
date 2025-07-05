@@ -80,7 +80,7 @@ void	print_state(t_round_table *table, int id, char *state)
 	relative_time = get_timestamp() - table->start_time;
 	if (!table->sim_halted)
 	{
-		if (state[7] == 'd') // A bit of a hack to check for "died"
+		if (strcmp(state, STATE_DEAD) == 0)
 			table->sim_halted = true;
 		printf("%lu %d %s\n", relative_time, id, state);
 	}
