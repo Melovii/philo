@@ -25,7 +25,10 @@ int	start_threads(t_round_table *table)
 			return (0); // TODO: handle error
 		
 		// Small delay to stagger thread startup and prevent perfect synchronization
-		usleep(500); // 0.5ms delay between thread creation
+
+		delay(1); // 1ms delay between thread creation for better accuracy
+		// TODO: CONSIDER USING THIS INSTEAD?
+		// usleep(500); // 0.5ms delay between thread creation
 		i++;
 	}
 	// I should maybe check all philos simultaneously for meals_eaten flag? (must_eat_count)
