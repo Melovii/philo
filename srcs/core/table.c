@@ -42,8 +42,8 @@ void	init_philosophers(t_round_table *table)
 		table->philos[i].right_fork = &table->forks[(i + 1) % table->num_philos]; // % to wrap around the array
 		table->philos[i].last_meal = 0; // init last meal timestamp
 		table->philos[i].meals_eaten = 0; // init meals eaten
-		table->philos[i].is_full = false; // init full state
-		table->philos[i].table = table; // set reference back to the table
+		table->philos[i].is_full = false; // init full state // TODO: do I keep this?
+		table->philos[i].table = table; // set reference back to the table // TODO: do I keep this?
 		i++;
 	}
 }
