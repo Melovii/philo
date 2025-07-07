@@ -76,13 +76,16 @@ void	print_state(t_round_table *table, int id, char *state)
 {
 	unsigned long	relative_time;
 
-	pthread_mutex_lock(&table->print_lock);
-	relative_time = get_timestamp() - table->start_time;
+	pthread_mutex_lock(&table->death_lock); // lock death_lock before reading/writing sim_halted
 	if (!table->sim_halted)
 	{
 		if (strcmp(state, STATE_DEAD) == 0)
 			table->sim_halted = true;
+
+		pthread_mutex_lock(&table->print_lock); // lock print lock only for printing
+		relative_time = get_timestamp() - table->start_time;
 		printf("%lu %d %s\n", relative_time, id, state);
+		pthread_mutex_unlock(&table->print_lock);
 	}
-	pthread_mutex_unlock(&table->print_lock);
+	pthread_mutex_unlock(&table->death_lock);
 }

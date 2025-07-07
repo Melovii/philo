@@ -98,22 +98,22 @@ void	*philo_routine(void *arg)
 	}
 	if (philo->id % 2 == 0)
 		usleep(100);
-	// think
-	while (!table->sim_halted)
-	{
-		// think (philosopher contemplates before trying to eat lmao)
-		print_state(table, philo->id, STATE_THINK);
-		
-		// pickup forks
-		pick_up_forks(philo);
 
-		// eat
+	// think
+	while (1)
+	{
+		pthread_mutex_lock(&table->death_lock);
+		if (table->sim_halted)
+		{
+			pthread_mutex_unlock(&table->death_lock);
+			break;
+		}
+		pthread_mutex_unlock(&table->death_lock);
+
+		print_state(table, philo->id, STATE_THINK);
+		pick_up_forks(philo);
 		eat(philo);
-		
-		// put down forks
 		put_down_forks(philo);
-		
-		// sleep
 		rest(philo);
 		think(philo);
 	}
