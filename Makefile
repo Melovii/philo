@@ -8,14 +8,16 @@ INCLUDES		=	-I./includes
 SRCS_DIR		=	srcs
 OBJS_DIR		=	objs
 CORE_DIR		=	core
+THREADS_DIR		=	threads
 PARSING_DIR		=	parsing
 
 SRC_FILES		=	main.c							\
-            		$(CORE_DIR)/actions.c			\
-            		$(CORE_DIR)/routine.c			\
             		$(CORE_DIR)/simulation.c		\
             		$(CORE_DIR)/table.c				\
-            		$(CORE_DIR)/time.c				\
+            		$(THREADS_DIR)/actions.c		\
+            		$(THREADS_DIR)/routine.c		\
+            		$(THREADS_DIR)/monitor.c		\
+            		$(THREADS_DIR)/time.c			\
             		$(PARSING_DIR)/ft_atoi.c		\
             		$(PARSING_DIR)/parse.c			\
 

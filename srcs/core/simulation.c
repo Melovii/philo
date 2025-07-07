@@ -31,67 +31,6 @@ int	start_threads(t_round_table *table)
 	return (1);
 }
 
-// * Check if all philosophers have eaten enough times
-static int	full_check(t_round_table *table)
-{
-	int	i;
-
-	if (table->must_eat_count == -1)
-		return (0);
-	i = 0;
-	pthread_mutex_lock(&table->meal_lock);
-	while (i < table->num_philos)
-	{
-		// If any philosopher has not eaten enough times, return false
-		if (table->must_eat_count != -1
-			&& table->philos[i].meals_eaten < table->must_eat_count)
-		{
-			pthread_mutex_unlock(&table->meal_lock);
-			return (0);
-		}
-		i++;
-	}
-	pthread_mutex_unlock(&table->meal_lock);
-	return (1);
-}
-
-// * Monitor simulation until death or completion
-static void	*monitor(void *data)
-{
-	t_round_table	*table;
-	int				i;
-
-	table = (t_round_table *)data;
-	while (1)
-	{
-		i = 0;
-		while (i < table->num_philos)
-		{
-			pthread_mutex_lock(&table->meal_lock);
-			if (get_timestamp() - table->philos[i].last_meal > table->time_to_die)
-			{
-				print_state(table, table->philos[i].id, STATE_DEAD);
-				pthread_mutex_lock(&table->death_lock);
-				table->sim_halted = true;
-				pthread_mutex_unlock(&table->death_lock);
-				pthread_mutex_unlock(&table->meal_lock);
-				return (NULL);
-			}
-			pthread_mutex_unlock(&table->meal_lock);
-			i++;
-		}
-		if (full_check(table))
-		{
-			pthread_mutex_lock(&table->death_lock);
-			table->sim_halted = true;
-			pthread_mutex_unlock(&table->death_lock);
-			return (NULL);
-		}
-		delay(1);
-	}
-	return (NULL);
-}
-
 // * Wait for all philosopher threads to finish
 static void	join_threads(t_round_table *table)
 {

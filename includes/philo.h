@@ -100,27 +100,37 @@ void			delay(unsigned long ms);
 void			ft_usleep(unsigned long ms);
 
 
-/* --- table.c --- */
+/* --- CORE --- */
+
+/* --- core/table.c --- */
 int     		init_round_table(t_round_table *table);
 void			init_philosophers(t_round_table *table);
 void    		cleanup_table(t_round_table *table);
 void    		print_state(t_round_table *table, int id, char *state);
 
-
-/* --- simulation.c --- */
+/* --- core/simulation.c --- */
 int     		start_threads(t_round_table *table);
 void    		run_sim(t_round_table *table);
-// int     		detect_and_signal_death(t_round_table *table);
 
-/* --- actions.c --- */
-void	pick_up_forks(t_philo *philo);
-void	put_down_forks(t_philo *philo);
-void	eat(t_philo *philo);
-void	rest(t_philo *philo);
-void	think(t_philo *philo);
 
-/* --- routine.c --- */
+/* --- THREADS --- */
+
+/* --- threads/monitor.c --- */
+void			*monitor(void *data);
+
+/* --- threads/actions.c --- */
+void			pick_up_forks(t_philo *philo);
+void			put_down_forks(t_philo *philo);
+void			eat(t_philo *philo);
+void			rest(t_philo *philo);
+void			think(t_philo *philo);
+
+/* --- threads/routine.c --- */
 void    		*philo_routine(void *arg);
+
+/* --- threads/time.c --- */
+unsigned long	get_timestamp(void);
+void			delay(unsigned long ms);
 
 
 /* temp */
