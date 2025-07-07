@@ -112,6 +112,12 @@ int     		start_threads(t_round_table *table);
 void    		run_sim(t_round_table *table);
 // int     		detect_and_signal_death(t_round_table *table);
 
+/* --- actions.c --- */
+void	pick_up_forks(t_philo *philo);
+void	put_down_forks(t_philo *philo);
+void	eat(t_philo *philo);
+void	rest(t_philo *philo);
+void	think(t_philo *philo);
 
 /* --- routine.c --- */
 void    		*philo_routine(void *arg);

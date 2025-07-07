@@ -11,6 +11,7 @@ CORE_DIR		=	core
 PARSING_DIR		=	parsing
 
 SRC_FILES		=	main.c							\
+            		$(CORE_DIR)/actions.c			\
             		$(CORE_DIR)/routine.c			\
             		$(CORE_DIR)/simulation.c		\
             		$(CORE_DIR)/table.c				\
