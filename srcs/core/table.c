@@ -61,6 +61,7 @@ void	cleanup_table(t_round_table *table)
 		i++;
 	}
 
+	// TODO: check if mutex_destroy returns an error
 	// destroy control mutexes (print_lock, death_lock, meal_lock)
 	pthread_mutex_destroy(&table->print_lock); // destroy print lock mutex
 	pthread_mutex_destroy(&table->death_lock); // destroy death lock mutex
