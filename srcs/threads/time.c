@@ -18,9 +18,18 @@ unsigned long	get_timestamp(void)
 void	delay(unsigned long ms)
 {
 	unsigned long	start;
+	unsigned long	end;
+	unsigned long	now;
 
 	start = get_timestamp();
-
-	while ((get_timestamp() - start) < ms)
-		usleep(100); // Sleep for 100 microseconds to avoid busy waiting (consider 500 microseconds)
+	end = start + ms;
+	now = start;
+	while (end > now + 5)
+	{
+		usleep(1000 * (end - now - 5));
+		now = get_timestamp();
+	}
+	// busy wait for last few milliseconds for accuracy
+	while (end > now)
+		now = get_timestamp();
 }
