@@ -44,11 +44,8 @@ void	eat(t_philo *philo)
 {
 	print_state(philo->table, philo->id, STATE_EAT);
 	
-	// lock meal
+	// lock meal only to update meals eaten count
 	pthread_mutex_lock(&philo->table->meal_lock);
-
-	// update last meal timestamp
-	philo->last_meal = get_timestamp();
 	
 	// update meals eaten count
 	philo->meals_eaten++;
@@ -58,6 +55,11 @@ void	eat(t_philo *philo)
 	
 	// delay for eating time
 	delay(philo->table->time_to_eat);
+	
+	// update last meal timestamp AFTER eating is complete
+	pthread_mutex_lock(&philo->table->meal_lock);
+	philo->last_meal = get_timestamp();
+	pthread_mutex_unlock(&philo->table->meal_lock);
 }
 
 // * Simulates resting/sleeping by delaying for the specified time

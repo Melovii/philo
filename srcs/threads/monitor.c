@@ -24,18 +24,26 @@ static int	full_check(t_round_table *table)
 	return (1);
 }
 
-// * Check if a philosopher has died
+// * Check if a philosopher has died with timing tolerance
 static int	death_check(t_round_table *table)
 {
 	int				i;
 	unsigned long	now;
+	unsigned long	time_since_meal;
+	unsigned long	death_threshold;
 
 	i = 0;
+	now = get_timestamp();
+	
+	// Add small tolerance (1ms) to account for timing variations
+	death_threshold = table->time_to_die + 1;
+	
 	while (i < table->num_philos)
 	{
 		pthread_mutex_lock(&table->meal_lock);
-		now = get_timestamp();
-		if (now - table->philos[i].last_meal >= table->time_to_die)
+		time_since_meal = now - table->philos[i].last_meal;
+		
+		if (time_since_meal >= death_threshold)
 		{
 			print_state(table, table->philos[i].id, STATE_DEAD);
 			pthread_mutex_lock(&table->death_lock);
@@ -73,7 +81,8 @@ void	*monitor(void *data)
 	{
 		if (death_check(table) || halt_on_full(table))
 			break;
-		delay(1);
+		delay(1); // TODO: Consider changing to this
+		// usleep(500);
 	}
 	return (NULL);
 }
