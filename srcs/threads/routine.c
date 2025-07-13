@@ -31,7 +31,7 @@ void	*philo_routine(void *arg)
 	if (philo->id % 2 == 0)
 	{
 		// delay(table->time_to_eat); // TODO: Consider changing it to this	
-		usleep(100);
+		delay(10); // ! added to stagger even philosophers
 	}
 
 	// think

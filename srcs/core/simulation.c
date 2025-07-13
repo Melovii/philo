@@ -25,7 +25,7 @@ int	start_threads(t_round_table *table)
 			return (0); // TODO: handle error
 		
 		// Small delay to stagger thread startup and prevent perfect synchronization
-		usleep(500); // 0.5ms delay between thread creation
+		// usleep(500); // 0.5ms delay between thread creation // !! REMOVED to prevent synchronization issues !!
 		i++;
 	}
 	return (1);
