@@ -5,6 +5,8 @@ int	validate_args(char **argv)
 	int	val;
 	int	i;
 
+	// TODO: remove this since subject.pdf doesn't require me to handle philosopher count
+	// ? don't forget about sub 60ms ?
 	val = ft_atoi(argv[1]);
 	if (val > MAX_PHILOS || val < MIN_PHILOS)
 		return (write(2, "Error: Invalid number of philosophers.\n", 40));
@@ -26,7 +28,7 @@ int	validate_args(char **argv)
 	return (0);
 }
 
-// Read & validate argv into table
+// * Read & validate argv into table
 int	parse_args(int argc, char **argv, t_round_table *table)
 {	
     // Convert arguments to appropriate types

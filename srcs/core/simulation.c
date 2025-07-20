@@ -8,7 +8,7 @@ int	start_threads(t_round_table *table)
 
 	start_time = get_timestamp(); // Get simulation start time
 	table->start_time = start_time; // Store in table for relative timestamps
-	
+
 	// Set initial meal time for all philosophers to prevent immediate death
 	i = 0;
 	while (i < table->num_philos)
@@ -17,15 +17,17 @@ int	start_threads(t_round_table *table)
 		i++;
 	}
 
+	// Initialize mutexes for each philosopher
 	i = 0;
 	while (i < table->num_philos)
 	{
 		// stores thread ID, and passes routine to each philosopher
 		if (pthread_create(&table->philos[i].thread, NULL, philo_routine, &table->philos[i]) != 0)
+		{
+			printf("Error: Failed to create philosopher thread %d\n", i + 1);
+			cleanup_threads(table, i);
 			return (0); // TODO: handle error
-		
-		// Small delay to stagger thread startup and prevent perfect synchronization
-		// usleep(500); // 0.5ms delay between thread creation // !! REMOVED to prevent synchronization issues !!
+		}
 		i++;
 	}
 	return (1);

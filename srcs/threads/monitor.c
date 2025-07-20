@@ -32,9 +32,9 @@ static int	death_check(t_round_table *table)
 	unsigned long	time_since_meal;
 	unsigned long	death_threshold;
 
-	i = 0;
 	// Add small tolerance (1ms) to account for timing variations
 	death_threshold = table->time_to_die + 1;
+	i = 0;
 
 	while (i < table->num_philos)
 	{
@@ -43,15 +43,9 @@ static int	death_check(t_round_table *table)
 
 		// Calculate time since last meal
 		time_since_meal = now - table->philos[i].last_meal;
-		
-		// printf("[DEBUG] Philosopher %d: last meal at %lu ms, now at %lu ms, time_since_meal = %lu ms\n",
-			// table->philos[i].id, table->philos[i].last_meal, now, time_since_meal);
-			
+
 		if (time_since_meal >= death_threshold)
 		{
-			// printf("[DEBUG] Philosopher %d died! time_since_meal=%lu >= %lu\n",
-			// 	table->philos[i].id, time_since_meal, death_threshold);
-
 			print_state(table, table->philos[i].id, STATE_DEAD);
 			pthread_mutex_lock(&table->death_lock);
 			table->sim_halted = true;
@@ -88,8 +82,7 @@ void	*monitor(void *data)
 	{
 		if (death_check(table) || halt_on_full(table))
 			break;
-		delay(1); // TODO: Consider changing to this
-		// usleep(500);
+		delay(1);
 	}
 	return (NULL);
 }

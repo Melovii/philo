@@ -10,10 +10,13 @@ int 	init_round_table(t_round_table *table)
 	table->philos = malloc(sizeof(t_philo) * table->num_philos); // allocate philosophers array
 	if (!table->philos)
 		return (0);
-		
+
 	table->forks = malloc(sizeof(t_mtx) * table->num_philos); // one mutex per fork
 	if (!table->forks)
+	{
+		free(table->philos);
 		return (0);
+	}
 
 	// init fork mutexes
 	i = 0;
@@ -46,30 +49,6 @@ void	init_philosophers(t_round_table *table)
 		table->philos[i].table = table; // set reference back to the table // TODO: do I keep this?
 		i++;
 	}
-}
-
-// Destroy mutexes, free arrays
-void	cleanup_table(t_round_table *table)
-{
-	int	i;
-
-	// destroy all forks (loop)
-	i = 0;
-	while (i < table->num_philos)
-	{
-		pthread_mutex_destroy(&table->forks[i]); // destroy each fork mutex
-		i++;
-	}
-
-	// TODO: check if mutex_destroy returns an error
-	// destroy control mutexes (print_lock, death_lock, meal_lock)
-	pthread_mutex_destroy(&table->print_lock); // destroy print lock mutex
-	pthread_mutex_destroy(&table->death_lock); // destroy death lock mutex
-	pthread_mutex_destroy(&table->meal_lock); // destroy meal lock mutex
-
-	// free allocated memory (arrays)
-	free(table->philos); // free philosophers array
-	free(table->forks); // free forks array
 }
 
 // Lock print_lock, printf timestamp/id/state, unlock

@@ -34,9 +34,8 @@ void	pick_up_forks(t_philo *philo)
 void	put_down_forks(t_philo *philo)
 {
 	// unlock the forks after eating
-
-	pthread_mutex_unlock(philo->left_fork); // unlock left fork
-	pthread_mutex_unlock(philo->right_fork); // unlock right fork
+	pthread_mutex_unlock(philo->left_fork);
+	pthread_mutex_unlock(philo->right_fork);
 }
 
 // * Simulates eating by updating last meal timestamp and meals eaten
@@ -54,7 +53,6 @@ void eat(t_philo *philo)
 
     pthread_mutex_unlock(&philo->table->meal_lock);
 }
-
 
 // * Simulates resting/sleeping by delaying for the specified time
 void	rest(t_philo *philo)
