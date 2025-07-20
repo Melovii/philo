@@ -112,6 +112,10 @@ void    		print_state(t_round_table *table, int id, char *state);
 int     		start_threads(t_round_table *table);
 void    		run_sim(t_round_table *table);
 
+/* --- core/cleanup.c --- */
+int		cleanup_threads(t_round_table *table, int count);
+void	cleanup_table(t_round_table *table);
+
 
 /* --- THREADS --- */
 

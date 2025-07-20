@@ -3,6 +3,7 @@ NAME			= philo
 CC				=	cc
 CFLAGS			=	-Wall -Wextra -Werror
 CFLAGS			+=	-pthread -g3 -fsanitize=thread
+CFLAGS			+=	-g
 INCLUDES		=	-I./includes
 
 SRCS_DIR		=	srcs
@@ -14,6 +15,7 @@ PARSING_DIR		=	parsing
 SRC_FILES		=	main.c							\
             		$(CORE_DIR)/simulation.c		\
             		$(CORE_DIR)/table.c				\
+					$(CORE_DIR)/cleanup.c			\
             		$(THREADS_DIR)/actions.c		\
             		$(THREADS_DIR)/routine.c		\
             		$(THREADS_DIR)/monitor.c		\
