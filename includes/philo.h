@@ -1,142 +1,88 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <pthread.h>	// for pthreads
-# include <unistd.h>	// for usleep, write
-# include <stdlib.h>	// for malloc, free
-# include <stdbool.h>	// for bool				// TODO: Check if permissable by the subject.pdf
-# include <limits.h>	// for INT_MAX			// TODO: Check if permissable by the subject.pdf
-# include <stdio.h>		// for printf			// TODO: Remove if only necessary in main.c
-# include <sys/time.h>	// for gettimeofday
-# include <string.h>	// for strcmp			// TODO: Replace with ft_strcmp or remove later
+# include <unistd.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <pthread.h>
+# include <sys/time.h>
 
-// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Definitions
-
-// * Exit codes
 # define EX_OK			0
 # define EX_KO			1
 
-// * Bounds
 # define MIN_ARGS		5
 # define MAX_ARGS		6
 
-// * Number of philosophers allowed
-# define MIN_PHILOS		1
-# define MAX_PHILOS		200
-# define MAX_PHILOS_STR	"200"
+# define MAX_LONG		9223372036854775807L
+# define MAX_INT		2147483647
+# define MIN_INT		-2147483648
 
-// * Time conversion
-# define MS_TO_US(x)	((x) * 1000L)	// millisecond to microsecond conversion for usleep // TODO: CHECK IF I CAN USE MACROS
-
-// * Philo state msgs
 # define STATE_FORK		"has taken a fork"
 # define STATE_SLEEP	"is sleeping"
 # define STATE_EAT		"is eating"
 # define STATE_DEAD		"died"
 # define STATE_THINK	"is thinking"
-# define STATE_ERROR	"Error in simulation" // TODO: consider removing this lol
+# define STATE_ERROR	"Error in simulation"
 
-// * Cute emojis for states
-# define FORK_EM		"•ᴗ• 𐂐"
-# define EEP_EM			"(ᴗ˳ᴗ)ᶻ𝗓𐰁 ࣪ ִֶָ☾."
-# define EAT_EM			"(っ˘ڡ˘ς)"
-# define THINK_EM		"( ╹ -╹)?"
-# define DEAD_EM		"𝕯𝖊𝖆𝖙𝖍 𓉸 ☠︎︎ ✘_ ✘" // pick one lol
-
-#define USAGE_MSG  \
-	"Usage: %s number_of_philosophers time_to_die time_to_eat " \
-	"time_to_sleep [must_eat]\n"	// TODO: check if this is ok lol
-
-typedef pthread_mutex_t t_mtx; // convenient lol
-
-// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Structs
+typedef pthread_mutex_t			t_mtx;
 
 typedef struct s_round_table	t_round_table;
 
-// * Per-philosopher state
-typedef struct	s_philo
+typedef struct s_philo
 {
-	int				id;				// starts from 1, ok? lol
-	unsigned long	last_meal;		// timestamp of last meal eaten - use to detect death (if current time - last_meal > time_to_die)
-	int				meals_eaten;	// use for optional stopping condition // !TODO: Consider changing to size_t
-	bool			is_full;		// true if the philo has eaten enough times // ! uhm do I keep this lol
-	pthread_t		thread;			// the ACTUAL thread the philo runs on
-	t_mtx			*left_fork;		// pointer to the left fork (mutex 1)
-	t_mtx			*right_fork;	// pointer to the right fork (mutex 1)
-	t_round_table	*table;			// reference back to the table
+	int				id;
+	int				meals_eaten;
+	unsigned long	last_meal;
+	pthread_t		thread;
+	t_mtx			*left_fork;
+	t_mtx			*right_fork;
+	t_round_table	*table;
 }				t_philo;
 
-// * Global simulation parameters and resources
-typedef struct	s_round_table
+typedef struct s_round_table
 {
-	int				num_philos;		// philosopher AND fork count 
-	unsigned long	time_to_sleep;	// ms to stimulate mimimi 
-	unsigned long	time_to_eat;	// ms to stimulate nomnom
-	unsigned long	time_to_die;	// ms allowed between "end of last meal" and strarvation (check condition)
-	int				must_eat_count;	// end simulation when every philo eats this many times
-	bool			sim_halted;		// true when all philos are full or dead
-	unsigned long	start_time;		// simulation start timestamp for relative time calculation
-	t_philo			*philos;		// holds each philosopher's state
-	t_mtx			*forks;			// one per fork (lock two adjacent forks before eating)
-	t_mtx			print_lock;		// use this to prevent printf calls from different threads
-	t_mtx			death_lock;		// use this to prevent multiple death signals
-	t_mtx			meal_lock;		// use this to prevent multiple meal count updates
+	int				num_philos;
+	int				sim_halted;
+	int				must_eat_count;
+	unsigned long	time_to_sleep;
+	unsigned long	time_to_eat;
+	unsigned long	time_to_die;
+	unsigned long	start_time;
+	t_mtx			*forks;
+	t_mtx			print_lock;
+	t_mtx			death_lock;
+	t_mtx			meal_lock;
+	t_philo			*philos;
 }				t_round_table;
 
-// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-		// * Function Prototypes
-
-/* --- parse.c --- */
-int 			parse_args(int argc, char **argv, t_round_table *table);
 int				validate_args(char **argv);
+int				parse_args(int argc, char **argv, t_round_table *table);
 
-
-/* --- ft_atoi.c --- */
 int				ft_atoi(const char *str);
+int				ft_strcmp(const char *s1, const char *s2);
 
-
-/* --- time.c --- */
 unsigned long	get_timestamp(void);
 void			delay(unsigned long ms);
 void			ft_usleep(unsigned long ms);
 
-
-/* --- CORE --- */
-
-/* --- core/table.c --- */
-int     		init_round_table(t_round_table *table);
+int				init_round_table(t_round_table *table);
 void			init_philosophers(t_round_table *table);
-void    		cleanup_table(t_round_table *table);
-void    		print_state(t_round_table *table, int id, char *state);
 
-/* --- core/simulation.c --- */
-int     		start_threads(t_round_table *table);
-void    		run_sim(t_round_table *table);
+void			print_state(t_round_table *table, int id, char *state);
 
-/* --- core/cleanup.c --- */
-int		cleanup_threads(t_round_table *table, int count);
-void	cleanup_table(t_round_table *table);
+int				start_threads(t_round_table *table);
+int				cleanup_threads(t_round_table *table, int count);
+void			run_sim(t_round_table *table);
 
-
-/* --- THREADS --- */
-
-/* --- threads/monitor.c --- */
+void			*philo_routine(void *arg);
 void			*monitor(void *data);
 
-/* --- threads/actions.c --- */
 void			pick_up_forks(t_philo *philo);
 void			put_down_forks(t_philo *philo);
 void			eat(t_philo *philo);
 void			rest(t_philo *philo);
 void			think(t_philo *philo);
 
-/* --- threads/routine.c --- */
-void    		*philo_routine(void *arg);
-
-/* --- threads/time.c --- */
-unsigned long	get_timestamp(void);
-void			delay(unsigned long ms);
-
-
-/* temp */
+void			cleanup_table(t_round_table *table);
 
 #endif

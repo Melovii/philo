@@ -5,12 +5,7 @@ int	validate_args(char **argv)
 	int	val;
 	int	i;
 
-	// TODO: remove this since subject.pdf doesn't require me to handle philosopher count
-	// ? don't forget about sub 60ms ?
 	val = ft_atoi(argv[1]);
-	if (val > MAX_PHILOS || val < MIN_PHILOS)
-		return (write(2, "Error: Invalid number of philosophers.\n", 40));
-
 	i = 2;
 	while (i <= 4)
 	{
@@ -28,19 +23,15 @@ int	validate_args(char **argv)
 	return (0);
 }
 
-// * Read & validate argv into table
 int	parse_args(int argc, char **argv, t_round_table *table)
 {	
-    // Convert arguments to appropriate types
-    table->num_philos = ft_atoi(argv[1]);
-    table->time_to_die = ft_atoi(argv[2]);
-    table->time_to_eat = ft_atoi(argv[3]);
-    table->time_to_sleep = ft_atoi(argv[4]);
-
-    if (argc == MAX_ARGS)
-        table->must_eat_count = ft_atoi(argv[5]);
-    else
-        table->must_eat_count = -1; // No must eat condition
-
-    return (1);
+	table->num_philos = ft_atoi(argv[1]);
+	table->time_to_die = ft_atoi(argv[2]);
+	table->time_to_eat = ft_atoi(argv[3]);
+	table->time_to_sleep = ft_atoi(argv[4]);
+	if (argc == MAX_ARGS)
+		table->must_eat_count = ft_atoi(argv[5]);
+	else
+		table->must_eat_count = -1;
+	return (1);
 }

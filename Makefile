@@ -20,8 +20,9 @@ SRC_FILES		=	main.c							\
             		$(THREADS_DIR)/routine.c		\
             		$(THREADS_DIR)/monitor.c		\
             		$(THREADS_DIR)/time.c			\
-            		$(PARSING_DIR)/ft_atoi.c		\
             		$(PARSING_DIR)/parse.c			\
+            		$(PARSING_DIR)/ft_atoi.c		\
+					$(PARSING_DIR)/ft_strcmp.c
 
 OBJ_FILES		=	$(SRC_FILES:.c=.o)
 
