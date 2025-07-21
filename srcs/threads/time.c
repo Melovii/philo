@@ -1,4 +1,5 @@
-#include "philo.h"
+#include <unistd.h>
+#include <sys/time.h>
 
 unsigned long	get_timestamp(void)
 {
