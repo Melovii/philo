@@ -1,9 +1,8 @@
-NAME			= philo
+NAME			=	philo
 
 CC				=	cc
 CFLAGS			=	-Wall -Wextra -Werror
 CFLAGS			+=	-pthread -g3 -fsanitize=thread
-CFLAGS			+=	-g
 INCLUDES		=	-I./includes
 
 SRCS_DIR		=	srcs
@@ -50,12 +49,4 @@ fclean: clean
 
 re: fclean all
 
-valgrind: fclean
-	@$(MAKE) -s CFLAGS="-Wall -Wextra -Werror -pthread -g3" all
-	@echo '#!/bin/bash' > run_valgrind.sh
-	@echo 'valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./philo $$@' >> run_valgrind.sh
-	@chmod +x run_valgrind.sh
-	@echo "\033[1;32m✓ Created:\033[0m \033[1;33mrun_valgrind.sh\033[0m"
-	@echo "\033[1;34m➜ Run with:\033[0m \033[1;36m./run_valgrind.sh [args]\033[0m"
-
-.PHONY: all clean fclean re valgrind
+.PHONY: all clean fclean re
