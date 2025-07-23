@@ -1,23 +1,20 @@
 #include "philo.h"
 
-static int	is_space(char c)
+// * Skips whitespace characters in the string
+static int	skip_whitespace(const char *str, int i)
 {
-	return (c == ' ' || c == '\t' || c == '\n'
-		|| c == '\f' || c == '\v' || c == '\r');
+	while (is_whitespace(str[i]))
+		i++;
+	return (i);
 }
 
+// * Returns index of first non-whitespace character
 static int	is_digit(char c)
 {
 	return (c >= '0' && c <= '9');
 }
 
-static int	skip_whitespace(const char *str, int i)
-{
-	while (is_space(str[i]))
-		i++;
-	return (i);
-}
-
+// * Gets the sign of the number and updates the index
 static int	parse_sign(const char *str, int *index)
 {
 	int	sign;
@@ -32,6 +29,7 @@ static int	parse_sign(const char *str, int *index)
 	return (sign);
 }
 
+// * Converts string to integer with overflow handling
 int	ft_atoi(const char *str)
 {
 	long	result;
@@ -43,10 +41,10 @@ int	ft_atoi(const char *str)
 	i = 0;
 	i = skip_whitespace(str, i);
 	sign = parse_sign(str, &i);
-	if (!is_digit(str[i]))
-		return (0);
-	while (is_digit(str[i]))
+	while (str[i])
 	{
+		if (!is_digit(str[i]))
+			return (0);
 		digit = str[i] - '0';
 		if (result > (MAX_LONG - digit) / 10)
 		{
