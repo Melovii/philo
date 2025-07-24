@@ -59,14 +59,14 @@ typedef struct s_round_table
 }				t_round_table;
 
 // Args & validation
-int		validate_args(char **argv);
-void	parse_args(int argc, char **argv, t_round_table *table);
+int				validate_args(char **argv);
+void			parse_args(int argc, char **argv, t_round_table *table);
 
 // Utils
-int		ft_atoi(const char *str);
-char	*arg_trim_r(char *str);
-int		ft_strcmp(const char *s1, const char *s2);
-int		is_whitespace(char c);
+int				ft_atoi(const char *str);
+char			*arg_trim_r(char *str);
+int				ft_strcmp(const char *s1, const char *s2);
+int				is_whitespace(char c);
 
 // Time
 unsigned long	get_timestamp(void);
@@ -74,27 +74,27 @@ void			delay(unsigned long ms);
 void			ft_usleep(unsigned long ms);
 
 // Init
-int		init_round_table(t_round_table *table);
-void	init_philosophers(t_round_table *table);
+int				init_round_table(t_round_table *table);
+void			init_philosophers(t_round_table *table);
 
 // Printing
-void	print_state(t_round_table *table, int id, char *state);
+void			print_state(t_round_table *table, int id, char *state);
 
 // Threads
-int		start_threads(t_round_table *table);
-void	run_sim(t_round_table *table);
-void	*philo_routine(void *arg);
-void	*monitor(void *data);
+int				start_threads(t_round_table *table);
+void			run_sim(t_round_table *table);
+void			*philo_routine(void *arg);
+void			*monitor(void *data);
 
 // Actions
-void	pick_up_forks(t_philo *philo);
-void	put_down_forks(t_philo *philo);
-void	eat(t_philo *philo);
-void	rest(t_philo *philo);
-void	think(t_philo *philo);
+void			pick_up_forks(t_philo *philo);
+void			put_down_forks(t_philo *philo);
+void			eat(t_philo *philo);
+void			rest(t_philo *philo);
+void			think(t_philo *philo);
 
 // Cleanup
-int		cleanup_table(t_round_table *table, int fail_i, int fork_count);
-void	cleanup_threads(t_round_table *table, int count);
+int				cleanup_table(t_round_table *table, int fail_i, int fork_count);
+void			cleanup_threads(t_round_table *table, int count);
 
 #endif
